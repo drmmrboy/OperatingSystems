@@ -56,7 +56,7 @@ int main(int argC, char **argV, char **envP )
     int proccess1;
 
     char **command;
-    int status; //thanks mike
+    //int status; //thanks mike
     printf("%s", "\nPrompt:");
     bool pipe = false;
     while(fgets(inputLine, 200, stdin) !=NULL) //stdin = standard input
@@ -88,7 +88,7 @@ int main(int argC, char **argV, char **envP )
             }
             else
             {
-                wait(&status);
+                wait(&proccess1);
 
             }
         }
@@ -111,7 +111,7 @@ int main(int argC, char **argV, char **envP )
             else
             {
                 puts("wait");
-                wait(&status);
+                wait(&proccess1);
             }
         }
 
@@ -310,6 +310,7 @@ char** pipeGet(char *inputLine) //this is almost identical to ParseInput
     int inputLength = strlen(inputLine);
     char **arguments;
 
+
     //PART 1 Variables
     int numOfComm = 1;
     int x;
@@ -336,8 +337,9 @@ char** pipeGet(char *inputLine) //this is almost identical to ParseInput
     //PART 2
     puts("part2");
     arguments = malloc(numOfComm * sizeof(char*)); //allocate memory
-    for(y =0; y<inputLength; y++)
+    for(y =0; y<inputLength+1; y++)
     {
+        printf("%c\n", inputLine[y]);
         if(inputLine[y] =='|' || inputLine[y] =='\0')
         {
             count1++;
@@ -357,9 +359,10 @@ char** pipeGet(char *inputLine) //this is almost identical to ParseInput
 
     //PART 3
     puts("part3");
-
+    printf("%s", inputLine);
     for(z =0; z<inputLength; z++)
     {
+        printf("%c\n", inputLine[z]);
         if(inputLine[z] == '|' || inputLine[z] == '\0')
         {
             count3++;
