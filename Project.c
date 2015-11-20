@@ -101,16 +101,18 @@ int main(int argC, char **argV, char **envP )
 
             if(proccess1 == -1)
             {
-                puts("Error with for. plz buy new one");
+                puts("Error with fork. plz buy new one");
             }
             else if(proccess1 == 0)
             {
                 puts("pipeExecute");
                 pipeExecute(command);
+
+
             }
             else
             {
-                puts("wait");
+                //puts("wait");
                 wait(&proccess1);
             }
         }
@@ -339,7 +341,7 @@ char** pipeGet(char *inputLine) //this is almost identical to ParseInput
     arguments = malloc(numOfComm * sizeof(char*)); //allocate memory
     for(y =0; y<inputLength+1; y++)
     {
-        printf("%c\n", inputLine[y]);
+        //printf("%c\n", inputLine[y]);
         if(inputLine[y] =='|' || inputLine[y] =='\0')
         {
             count1++;
@@ -359,7 +361,7 @@ char** pipeGet(char *inputLine) //this is almost identical to ParseInput
 
     //PART 3
     puts("part3");
-    printf("%s", inputLine);
+   //printf("%s", inputLine);
     for(z =0; z<inputLength; z++)
     {
         printf("%c\n", inputLine[z]);
@@ -380,7 +382,7 @@ char** pipeGet(char *inputLine) //this is almost identical to ParseInput
             count3++;
         }
     }
-    printf("%s", arguments);
+    //printf("%s", arguments);
     return arguments;
 }
 
@@ -401,10 +403,11 @@ void pipeExecute(char **command)
     }
     else if(proccess2 == 0)
     {
-        close(STDIN_FILENO);
+        close(stdin);
         close(pipeCommand[1]);
 
-        dup2(pipeCommand[0], STDIN_FILENO); //for dup2 you need an extra argument
+        dup2(pipeCommand[0], stdin); //for dup2 you need an extra argument
+
 
         execute(first);
 
@@ -413,15 +416,19 @@ void pipeExecute(char **command)
     {
         wait(&proccess2);
 
-        close(STDOUT_FILENO);
+        close(stdout);
         close(pipeCommand[0]);
 
-        dup2(pipeCommand[1],STDOUT_FILENO);
-
+        dup2(pipeCommand[1], stdout);
+       // close(pipeCommand[1]);
 
         execute(second);
+
     }
 
+    close(pipeCommand[0]);
+    close(pipeCommand[1]);
+    wait(&proccess2);
 
 
 
