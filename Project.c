@@ -53,7 +53,7 @@ int main(int argC, char **argV, char **envP )
     //notes:
     //  use fgets to read line
     char inputLine[200];
-    __pid_t proccess;
+    int proccess1;
 
     char **command;
     int status; //thanks mike
@@ -75,13 +75,13 @@ int main(int argC, char **argV, char **envP )
         {
 
             command = parseInput(inputLine);
-            proccess = fork();
+            proccess1 = fork();
 
-            if(proccess == -1)
+            if(proccess1 == -1)
             {
                 puts("Error with fork. plz buy new ones");
             }
-            else if(proccess == 0)
+            else if(proccess1 == 0)
             {
                 //EXECUTE! EXECUTE! EXECUTE!!!
                 execute(command);
@@ -97,13 +97,13 @@ int main(int argC, char **argV, char **envP )
             puts("made it to pipe");
             command = pipeGet(inputLine);
             puts("made it to pipe2");
-            proccess = fork();
+            proccess1 = fork();
 
-            if(proccess == -1)
+            if(proccess1 == -1)
             {
                 puts("Error with for. plz buy new one");
             }
-            else if(proccess == 0)
+            else if(proccess1 == 0)
             {
                 puts("pipeExecute");
                 pipeExecute(command);
@@ -389,26 +389,32 @@ void pipeExecute(char **command)
     int pipeCommand[2];
     pipe(pipeCommand);
 
-    int proccess = fork();
+    int proccess2;
+    proccess2 = fork();
 
-    if(proccess == -1)
+    if(proccess2 == -1)
     {
         puts("Error with fork, plz buy new ones");
     }
-    else if(proccess == 0)
+    else if(proccess2 == 0)
     {
         close(STDIN_FILENO);
-        dup2(pipeCommand[0], STDIN_FILENO); //for dup2 you need an extra argument
         close(pipeCommand[1]);
+
+        dup2(pipeCommand[0], STDIN_FILENO); //for dup2 you need an extra argument
 
         execute(first);
 
     }
     else
     {
+        wait(&proccess2);
+
         close(STDOUT_FILENO);
-        dup2(pipeCommand[1],STDOUT_FILENO);
         close(pipeCommand[0]);
+
+        dup2(pipeCommand[1],STDOUT_FILENO);
+
 
         execute(second);
     }
