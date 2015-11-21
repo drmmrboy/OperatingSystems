@@ -299,11 +299,13 @@ void execute(char **command)
         if (access(search, F_OK) != -1)
         {
             //puts("test");
+
             execv(search, command);
             break;
         }
         count++;
     }
+    printf("%p", &execv);
 }
 
 char** pipeGet(char *inputLine) //this is almost identical to ParseInput
@@ -382,7 +384,6 @@ char** pipeGet(char *inputLine) //this is almost identical to ParseInput
             count3++;
         }
     }
-    //printf("%s", arguments);
     return arguments;
 }
 
